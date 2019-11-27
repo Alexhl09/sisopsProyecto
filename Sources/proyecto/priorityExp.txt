@@ -1,0 +1,21 @@
+Priority Expulsivo // First come first served
+QUANTUM 0 // Indicando 0 Segundos
+0 Llega A 3
+5 Llega B 2
+10 Llega C 4
+12 Llega D 5
+2000 Acaba D
+2001 Acaba B
+2002 Acaba C
+2002 startI/O A
+2003 startI/O C
+2392 Llega E 5
+2423 Acaba E 
+3745 endI/O A
+4000 Llega G 1
+4838 Acaba A 
+5000 Llega F 2
+5727 startI/O B
+8937 endI/O B
+19938 Acaba C 
+19942 endSimulacion

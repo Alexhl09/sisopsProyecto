@@ -1,0 +1,24 @@
+FCFS // First come first served
+QUANTUM 0 // Indicando 0 Segundos
+0 Llega A
+5 Llega B
+10 Llega C
+12 Llega D
+2000 Acaba A
+2001 Acaba B
+2002 startI/O A // Error
+2003 startI/O C
+2392 Llega E
+2423 Acaba D
+3745 endI/O C
+4000 Llega G
+4838 Acaba E
+5000 Llega F
+5727 startI/O C
+8937 endI/O C
+19938 Acaba F
+19940 Acaba C
+19941 Acaba G
+19942 Acaba F
+19943 Acaba C
+19944 endSimulacion
