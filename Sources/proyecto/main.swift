@@ -41,7 +41,7 @@ Es la funcion base que llama a las demás funciones, se manda a llamar al final 
 */
 
 func main(){
-    let archivo = "fcfs.txt" //El nombre del archivo a leer en el directorio Documents
+    let archivo = "politica.txt" //El nombre del archivo a leer en el directorio Documents
     ///lineasDeArchivo contiene un arreglo con todas las lienas leidas del archivo
     let lineasDeArchivo = leerArchivo(archivo: archivo)
     ///Por cada linea en lineasDeArchivo se ejecuta la instrucción que se mandó a realizar
