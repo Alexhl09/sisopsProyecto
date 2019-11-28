@@ -79,7 +79,8 @@ func leerArchivo(archivo : String)->[String]{
             return lineas
         }
             ///En caso de error se imprime la causa del error
-        catch let error {print(error.localizedDescription) return []}
+        catch let error {print(error.localizedDescription)
+            return []}
     }else{
           ///En caso de error se manda un arreglo vacio
         return []
@@ -101,54 +102,87 @@ func procesarLinea(linea : String){
     
     //instrucciones es una variable local que almacena en un arreglo los strings que estaban separados por un espacio
     let instruccines = linea.split(separator: " ")
+    ///Dependiendo de si la linea contiene Llega, Acaba, start, end, endSimulacion
+    ///Se tienen diferentes procesos
     if(linea.contains("Llega")){
+        ///Si la linea contiene Llega se tiene que verificar que tipo de politica se va a aplicar para poder saber que constructor se manda a llamar, ya que hay uno que inicializa tambien la propiedad prioridad
         if(sistemaOperativo.FCFS){
+            ///Inicializacion de uan instancia de proceso con su id, tiempo de llegada
         let proceso : Proceso = Proceso(id: String(instruccines[2]), tiempoLlegada: String(instruccines[0]))
+            ///Se manda a llamar al metodo llegaProceso que tiene como proposito saber si va a correr en CPU o si lo va a dejar en alguna cola de listos
         sistemaOperativo.llegaProceso(proceso: proceso, tiempo: String(instruccines[0]))
         }else{
+            ///Inicializacion de uan instancia de proceso con su id, tiempo de llegada y prioridad
             let proceso : Proceso = Proceso(id: String(instruccines[2]), tiempoLlegada: String(instruccines[0]), prioridad : Int(String(instruccines[3])) ?? 0)
-        sistemaOperativo.llegaProceso(proceso: proceso, tiempo: String(instruccines[0]))
+            ///Se manda a llamar al metodo llegaProceso que tiene como proposito saber si va a correr en CPU o si lo va a dejar en alguna cola de listos
+            sistemaOperativo.llegaProceso(proceso: proceso, tiempo: String(instruccines[0]))
         }
     }else if (linea.contains("Acaba")){
+         ///Inicializacion de unn instancia de proceso con su id, tiempo de llegada
         let proceso : Proceso = Proceso(id: String(instruccines[2]), tiempoLlegada: String(instruccines[0]))
+        ///Se manda a llamar al metodo termina proceso del sistema operativo que decide que nuevo proceso entra de la cola de listos y manda al proceso actual a la cola de terminados. Esto solo ocurre si el ID del proceso que se mando a acabar es igual al que estaba corriendo en caso contrario se manda un error de advertencia
         sistemaOperativo.terminaProceso(proceso: proceso, tiempo: String(instruccines[0]))
     }else if (linea.contains("start")){
+        //En caso de que un proceso se haya mandado a comenzar con I/O se debe checar si es el mismo que esta corriendo, en caso de que se haya mando a I/O a un proceso que ni siquiera esta en CPU es un error.
         if(sistemaOperativo.procesoCorriendo != nil && sistemaOperativo.procesoCorriendo.id == String(instruccines[2])){
+            ///Se manda a llamar al set del tiempo en que incio su bloqueo para poder despues registrar cuanto tiempo estuvo bloqueado
             sistemaOperativo.procesoCorriendo.setTiempoDeInicioBloqueado(inicioBloqueado: String(instruccines[0]))
+            ///Se pone su atributo de bloqueado como verdadero
             sistemaOperativo.procesoCorriendo.bloqueado = true
+            ///El sistema operativo comienza la operacion de I/O poniendo al proceso correidno en cola de bloqueados y sacando uno nuevo en caso de que haya procesos en cola de listos
+            ///AQUI CAMBIA EL PROCESO QUE ESTA CORRIENDO; SE MANDA UNO Y CAMBIA AL QUE ESTABA EN LA COLA DE LISTOS
             sistemaOperativo.empiezaInputOutput(proceso: sistemaOperativo.procesoCorriendo, tiempo:  String(instruccines[0]))
+            ///El proceso que estaba en cola de listos termina su tiempo en que estaba esperando
             sistemaOperativo.procesoCorriendo.tiempoDeFinEspera = UInt64(instruccines[0]) ?? 0
+            ///El proceso corriendo calcula el tiempo de espera, resta el tiempo en que termino su espera y cuando comenzó
             sistemaOperativo.procesoCorriendo.setTiempoEspera()
         }else{
-              print("Error no se puede mandar a I/O a un proceso que no este en CPU\n\n\n")
+            ///No se puede mandar a I/O a un proceso que no este en CPU
+              print("Advertencia no se puede mandar a I/O a un proceso que no este en CPU\n\n\n")
         }
     }else if (linea.contains("endSimulacion")){
+        ///En caso de que termine la simulación
+        ///Se manda a llamar a un nuevo evento, que avisa que la simulación termino en el tiempo que se manda
         sistemaOperativo.nuevoEvento(situacion: "Termina Simulación", tiempo: String(instruccines[0]))
+        ///Se manda a imprimir todo lo que contiene el arreglo de eventos en el sistema operativo
         tablaEventos.print(sistemaOperativo.evento, style: Style.fancy)
-        tableProcesos.print(sistemaOperativo.colaDeTerminados, style: Style.psql)
+        ///Se manda a imprimir todo lo que contiene el arreglo de cola de terminados del sistema operativo
+        tableProcesos.print(sistemaOperativo.colaDeTerminados, style: Style.fancy)
+        ///Se busca la URL del directorio de Documentos
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-             var fileURL = dir.appendingPathComponent("priorityExpTabla.txt")
-            
+            ///Se crea una url de un nuevo docuemnto con el nombre de tablaResultante.txt
+             var fileURL = dir.appendingPathComponent("tablaResultante.txt")
         do{
+            ///Se escribe en el documento tablaResultante la tabla final con la que termino la operación
             try tablaEventos.string(for: sistemaOperativo.evento, style: Style.psql)!.write(to: fileURL, atomically: false, encoding: .utf8)
-        } catch {/* error handling here */}
+        } catch let error {print(error.localizedDescription}
         }
-        
     }else if (linea.contains("end")){
+        ///Se checa que este bloqueado el proceso que se desea terminar de I/O, en caso contrario se manda un mensaje de error y se obtiene el objeto que coincida con el ID
         let proceso : Proceso? = sistemaOperativo.isBloqueado(idPosiblementeBloqueado: String(instruccines[2]))
+        ///En caso de que se haya recibido un objeto de la operacion anterior
         if(proceso != nil){
+            ///El proceso deja de estar bloqueado
             proceso?.bloqueado = false
+            ///El sistema operativo tiene que terminar el I/O quitando al proceso de cola de bloqueados y colocando en CPU o en cola de listos dependiendo de la prioridad y de la cantidad de procesos en cola de listos
             sistemaOperativo.terminaInputOutput(proceso: proceso!, tiempo: String(instruccines[0]))
+            ///El proceso obtiene el tiempo en que estuvo termino su estatus de bloqueado
             proceso?.setTiempoDeFinBloqueado(finBloqueado: String(instruccines[0]))
+            ///El proceso calcula el tiempo en que estuvo bloqueado dependiendo del final de bloqueado menos el inicio de su estatus de bloqueado
             proceso?.setTiempoBloqueado()
         }else{
-            print("Error no se encuentra esperando por I/O\n\n\n")
+            print("Advertencia no se encuentra esperando por I/O\n\n\n")
         }
     }
     
 }
 
-
+/**
+ lineaSinComentarios
+ Esta función quita los comentarios que existan con la inicial de //
+    - Parameter linea : Se requiere un string con la información que se desea checar
+    - Returns: Regresa al mismo string solo sin los comentarios
+ */
 func lineaSinComentarios(linea : String)->String{
     if let index = linea.range(of: " //")?.lowerBound {
         return(String(linea[..<index]))
@@ -164,22 +198,3 @@ main()
 
 
 
-
-
-//if #available(OSX 10.12, *) {
-//
-//    DispatchQueue.global(qos: .background).async {
-//        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
-//            print("Inicia Simulación en tiempo 0")
-//            runCount += 1
-//        }
-//        let runLoop = RunLoop()
-//         runLoop.add(timer!, forMode: .common)
-//            RunLoop.current.run()
-//    }
-//
-//
-//
-// } else {
-//     // Fallback on earlier versions
-// }
