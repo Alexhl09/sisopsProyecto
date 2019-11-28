@@ -1,10 +1,10 @@
 import Foundation
 import TextTable
 
-/// VARIABLES DEL PROGRAMA
+/// **VARIABLES DEL PROGRAMA**
 
 /**
- sistemaOperativo
+ *sistemaOperativo*
  Es una instancia del tipo sistema Operativo (vease clase anexa) que tiene funciones y realiza las operaciones de CPU scheduling
  */
 var sistemaOperativo : SistemaOperativo = SistemaOperativo()
@@ -21,7 +21,7 @@ let tablaEventos = TextTable<Evento> {
         Column("Procesos Terminados" <- $0.situacionTerminado ?? "")]
 }
 /**
-tableProcesos
+*tableProcesos*
 Es una instancia del tipo TextTable con una platilla del tipo de Procesos (anexos a la carpeta) que contiene la estructura de la tabla que se va a desplegar en la terminal
 */
 let tableProcesos = TextTable<Proceso> {
@@ -33,15 +33,15 @@ let tableProcesos = TextTable<Proceso> {
 
 
 
-///FUNCIONES
+///**FUNCIONES**
 
 /**
-main
+*main*
 Es la funcion base que llama a las demás funciones, se manda a llamar al final del archivo
 */
 
 func main(){
-    let archivo = "politica.txt" //El nombre del archivo a leer en el directorio Documents
+    let archivo = "politicaPriority.txt" //El nombre del archivo a leer en el directorio Documents
     ///lineasDeArchivo contiene un arreglo con todas las lienas leidas del archivo
     let lineasDeArchivo = leerArchivo(archivo: archivo)
     ///Por cada linea en lineasDeArchivo se ejecuta la instrucción que se mandó a realizar
@@ -101,7 +101,11 @@ func procesarLinea(linea : String){
     //sleep(2)
     
     //instrucciones es una variable local que almacena en un arreglo los strings que estaban separados por un espacio
-    let instruccines = linea.split(separator: " ")
+    var instruccines = linea.split(separator: " ")
+    if(instruccines.count > 2){
+        instruccines.append(instruccines[2].dropFirst() ?? " ")
+        instruccines[2].removeLast()
+    }
     ///Dependiendo de si la linea contiene Llega, Acaba, start, end, endSimulacion
     ///Se tienen diferentes procesos
     if(linea.contains("Llega")){
@@ -140,7 +144,7 @@ func procesarLinea(linea : String){
             ///No se puede mandar a I/O a un proceso que no este en CPU
               print("Advertencia no se puede mandar a I/O a un proceso que no este en CPU\n\n\n")
         }
-    }else if (linea.contains("endSimulacion")){
+    }else if (linea.contains("FinSimulacion")){
         ///En caso de que termine la simulación
         ///Se manda a llamar a un nuevo evento, que avisa que la simulación termino en el tiempo que se manda
         sistemaOperativo.nuevoEvento(situacion: "Termina Simulación", tiempo: String(instruccines[0]))

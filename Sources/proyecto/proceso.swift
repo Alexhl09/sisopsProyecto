@@ -105,6 +105,7 @@ class Proceso {
           Hace uan suma de los tiempo de espera de un proceso
                */
     func setTiempoEspera(){
+      
         self.tiempoEspera += (Int(self.tiempoDeFinEspera) - Int(self.tiempoDeInicioEspera))
         self.tiempoDeFinEspera = 0
         self.tiempoDeInicioEspera = 0

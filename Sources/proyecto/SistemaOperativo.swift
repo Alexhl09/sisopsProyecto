@@ -132,7 +132,7 @@ class SistemaOperativo {
                         return false
                     }
                 }
-                self.procesoCorriendo = Proceso(proceso: proceso)
+                self.procesoCorriendo = proceso
            }else if(self.procesoCorriendo == nil || self.procesoCorriendo.prioridad == proceso.prioridad){
                 ///En caso de que las prioridades sean iguales entonces se compara con el tiempo de llagada de los procesos en FIFO
                 if(self.procesoCorriendo.tiempoLlegada < proceso.tiempoLlegada){
@@ -155,7 +155,7 @@ class SistemaOperativo {
                 }else{
                     self.procesoCorriendo.tiempoDeInicioEspera = UInt64(tiempo) ?? 0
                     self.colaDeListos.append(self.procesoCorriendo)
-                    self.procesoCorriendo = Proceso(proceso: proceso)
+                    self.procesoCorriendo =  proceso
                 }
            }else{
                 ///El proceso que llego se inicia su tiempo de espera
@@ -272,11 +272,12 @@ class SistemaOperativo {
         }else{
             ///Si no hay nadie en cola de listos y es Priority se manda directo a CPU
             if(self.colaDeListos.count == 0 && self.procesoCorriendo == nil){
-                    self.procesoCorriendo = proceso
+                self.procesoCorriendo = proceso
             }else if (self.procesoCorriendo.prioridad > proceso.prioridad){
+                self.procesoCorriendo.tiempoDeInicioEspera = UInt64(tiempo) ?? 0
                 ///Si la prioridad del proceso correidno es mayor, se cambia por el nuevo que llego
                 self.colaDeListos.append(self.procesoCorriendo)
-                self.procesoCorriendo = Proceso(proceso: proceso)
+                self.procesoCorriendo = proceso
                 ///Se ordenan deauerdo a las prioridades peusto que se agregó un nuevo proceso
                 self.colaDeListos.sort { (procesoA, procesoB) -> Bool in
                    if(procesoA.prioridad < procesoB.prioridad){
@@ -293,6 +294,7 @@ class SistemaOperativo {
                 }
             }else{
                 ///Se mete al proceso en cola de listos y se ordena de acuerdo a prioridad
+                proceso.tiempoDeInicioEspera = UInt64(tiempo) ?? 0
                 self.colaDeListos.append(proceso)
                 self.colaDeListos.sort { (procesoA, procesoB) -> Bool in
                   if(procesoA.prioridad < procesoB.prioridad){
