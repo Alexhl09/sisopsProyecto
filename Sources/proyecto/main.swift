@@ -160,7 +160,17 @@ func procesarLinea(linea : String){
             ///Se escribe en el documento tablaResultante la tabla final con la que termino la operación
             try tablaEventos.string(for: sistemaOperativo.evento, style: Style.psql)!.write(to: fileURL, atomically: false, encoding: .utf8)
         } catch let error {print(error.localizedDescription)}
-        }
+        
+        
+        var fileTerminados = dir.appendingPathComponent("tablaTerminados.txt")
+             do{
+                 ///Se escribe en el documento tablaResultante la tabla final con la que termino la operación
+                 try tableProcesos.string(for: sistemaOperativo.colaDeTerminados, style: Style.fancy)!.write(to: fileTerminados, atomically: false, encoding: .utf8)
+
+             } catch let error {print(error.localizedDescription)}
+             
+    }
+    
     }else if (linea.contains("end")){
         ///Se checa que este bloqueado el proceso que se desea terminar de I/O, en caso contrario se manda un mensaje de error y se obtiene el objeto que coincida con el ID
         let proceso : Proceso? = sistemaOperativo.isBloqueado(idPosiblementeBloqueado: String(instruccines[2]))
