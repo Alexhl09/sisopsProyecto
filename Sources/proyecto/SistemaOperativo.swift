@@ -36,7 +36,7 @@ class SistemaOperativo {
         }else{
             situacionCPU = "\(self.procesoCorriendo?.id ?? "") - \(self.procesoCorriendo?.prioridad ?? 0)"
         }
-        table.print([Evento(nombre: situacion, situacionColaListos: getIdsListos(), situacionCPU: situacionCPU, situacionColaBloqueados: self.getIdsBloqueados(), situacionTerminado: self.getIdsTerminados(), tiempo : tiempo)], style: Style.psql)
+        table.print([Evento(nombre: situacion, situacionColaListos: getIdsListos(), situacionCPU: situacionCPU, situacionColaBloqueados: self.getIdsBloqueados(), situacionTerminado: self.getIdsTerminados(), tiempo : tiempo)], style: Style.fancy)
         print("\n\n")
         self.evento.append(Evento(nombre: situacion, situacionColaListos: getIdsListos(), situacionCPU: situacionCPU , situacionColaBloqueados: self.getIdsBloqueados(), situacionTerminado: self.getIdsTerminados(), tiempo : tiempo))
         
@@ -264,7 +264,7 @@ class SistemaOperativo {
         if(self.colaDeListos.count > 0){
 //        self.colaDeListos.sort{$0.tiempoLlegada < $1.tiempoLlegada}
             self.procesoCorriendo = self.colaDeListos.removeFirst()
-          
+            
         }else{
             print("No hay procesos en cola de listo\n\n\n")
             self.procesoCorriendo = nil

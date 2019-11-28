@@ -8,7 +8,7 @@ class Proceso {
 	//Tiempo en que termina el proceso, recibido del txt
 	var tiempoTerminacion : UInt64!
 	//Tiempo de espera en la cola de listos
-	var tiempoEspera : UInt64 = 0
+	var tiempoEspera : Int = 0
 	//Tiempo que se encuentra bloqueado por una operación de input / output
 	var tiempoBloqueado : UInt64 = 0
 	//Bloqueado o no dependiendo si entro a la cola de listos
@@ -23,6 +23,8 @@ class Proceso {
     var tiempoDeFinEspera : UInt64 = 0
     
     var prioridad : Int!
+    
+    var tiempoCPU : UInt64 = 0
 
     
     init(id : String, tiempoLlegada : String){
@@ -50,7 +52,7 @@ class Proceso {
        }
 		
 
-	func getTiempoTurnaround()->UInt64{ return self.tiempoTerminacion - self.tiempoLlegada - self.tiempoBloqueado}
+	func getTiempoTurnaround()->UInt64{ return self.tiempoTerminacion - self.tiempoLlegada}
 	func isBloqueado()->Bool{return self.bloqueado}
     func setTiempoTerminacion(terminacion : String){self.tiempoTerminacion = UInt64(terminacion)}
     func setTiempoDeInicioBloqueado(inicioBloqueado : String) {self.tiempoDeInicioBloqueado = UInt64(inicioBloqueado) ?? 0}
@@ -59,10 +61,10 @@ class Proceso {
         self.tiempoDeFinBloqueado = 0
         self.tiempoDeInicioBloqueado = 0
     }
-    func getTiempoEspera()->UInt64{self.getTiempoTurnaround() - self.getTiempoBloqueado()}
+    func getTiempoEspera()->Int{self.tiempoEspera}
     func getTiempoBloqueado()->UInt64{self.tiempoBloqueado}
     func setTiempoEspera(){
-        self.tiempoEspera += (self.tiempoDeFinEspera - self.tiempoDeInicioEspera)
+        self.tiempoEspera += (Int(self.tiempoDeFinEspera) - Int(self.tiempoDeInicioEspera))
         self.tiempoDeFinEspera = 0
         self.tiempoDeInicioEspera = 0
     }
