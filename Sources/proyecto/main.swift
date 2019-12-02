@@ -102,7 +102,7 @@ func procesarLinea(linea : String){
     
     //instrucciones es una variable local que almacena en un arreglo los strings que estaban separados por un espacio
     var instruccines = linea.split(separator: " ")
-    if(instruccines.count > 2){
+    if(!sistemaOperativo.FCFS){
         instruccines.append(instruccines[2].dropFirst() ?? " ")
         instruccines[2].removeLast()
     }
@@ -144,7 +144,7 @@ func procesarLinea(linea : String){
             ///No se puede mandar a I/O a un proceso que no este en CPU
               print("Advertencia no se puede mandar a I/O a un proceso que no este en CPU\n\n\n")
         }
-    }else if (linea.contains("FinSimulacion")){
+    }else if (linea.contains("FinSimulacion") || linea.contains("endSimulacion")){
         ///En caso de que termine la simulación
         ///Se manda a llamar a un nuevo evento, que avisa que la simulación termino en el tiempo que se manda
         sistemaOperativo.nuevoEvento(situacion: "Termina Simulación", tiempo: String(instruccines[0]))
@@ -158,7 +158,7 @@ func procesarLinea(linea : String){
              var fileURL = dir.appendingPathComponent("tablaResultante.txt")
         do{
             ///Se escribe en el documento tablaResultante la tabla final con la que termino la operación
-            try tablaEventos.string(for: sistemaOperativo.evento, style: Style.psql)!.write(to: fileURL, atomically: false, encoding: .utf8)
+            try tablaEventos.string(for: sistemaOperativo.evento, style: Style.fancy)!.write(to: fileURL, atomically: false, encoding: .utf8)
         } catch let error {print(error.localizedDescription)}
         
         
