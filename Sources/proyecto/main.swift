@@ -41,7 +41,7 @@ Es la funcion base que llama a las demás funciones, se manda a llamar al final 
 */
 
 func main(){
-    let archivo = "politicaPriority.txt" //El nombre del archivo a leer en el directorio Documents
+    let archivo = "archivo.txt" //El nombre del archivo a leer en el directorio Documents
     ///lineasDeArchivo contiene un arreglo con todas las lienas leidas del archivo
     let lineasDeArchivo = leerArchivo(archivo: archivo)
     ///Por cada linea en lineasDeArchivo se ejecuta la instrucción que se mandó a realizar
@@ -97,15 +97,16 @@ func procesarLinea(linea : String){
     //Se imprime la instruccion que se manda
     // Sleep causa que por la cantidad de segundos puestos, se congele el codigo simulando que estan llegando las peticiones
     //sleep(1)
+    sleep(3)
     print(linea)
-    //sleep(2)
+
     
     //instrucciones es una variable local que almacena en un arreglo los strings que estaban separados por un espacio
     var instruccines = linea.split(separator: " ")
-    if(!sistemaOperativo.FCFS){
-        instruccines.append(instruccines[2].dropFirst() ?? " ")
-        instruccines[2].removeLast()
-    }
+//    if(!sistemaOperativo.FCFS){
+//        instruccines.append(instruccines[2].dropFirst() ?? " ")
+//        instruccines[2].removeLast()
+//    }
     ///Dependiendo de si la linea contiene Llega, Acaba, start, end, endSimulacion
     ///Se tienen diferentes procesos
     if(linea.contains("Llega")){
@@ -117,7 +118,7 @@ func procesarLinea(linea : String){
         sistemaOperativo.llegaProceso(proceso: proceso, tiempo: String(instruccines[0]))
         }else{
             ///Inicializacion de uan instancia de proceso con su id, tiempo de llegada y prioridad
-            let proceso : Proceso = Proceso(id: String(instruccines[2]), tiempoLlegada: String(instruccines[0]), prioridad : Int(String(instruccines[3])) ?? 0)
+            let proceso : Proceso = Proceso(id: String(instruccines[2]), tiempoLlegada: String(instruccines[0]), prioridad : Int(String(instruccines[4])) ?? 0)
             ///Se manda a llamar al metodo llegaProceso que tiene como proposito saber si va a correr en CPU o si lo va a dejar en alguna cola de listos
             sistemaOperativo.llegaProceso(proceso: proceso, tiempo: String(instruccines[0]))
         }
@@ -168,6 +169,23 @@ func procesarLinea(linea : String){
                  try tableProcesos.string(for: sistemaOperativo.colaDeTerminados, style: Style.fancy)!.write(to: fileTerminados, atomically: false, encoding: .utf8)
 
              } catch let error {print(error.localizedDescription)}
+            
+            
+            var promedioEspera  = 0
+            var promedioTurnaround : UInt64 = 0
+            var promedioBloqueado : UInt64 = 0
+            if(sistemaOperativo.colaDeTerminados.count > 0){
+                for i in sistemaOperativo.colaDeTerminados{
+                    promedioEspera += i.getTiempoEspera()
+                    promedioTurnaround += i.getTiempoTurnaround()
+                    promedioBloqueado += i.getTiempoBloqueado()
+                }
+                
+                print("El tiempo promedio de espera de los procesos terminados es de:\n\(promedioEspera/sistemaOperativo.colaDeTerminados.count)\n")
+                print("El tiempo promedio de turnaround de los procesos terminados es de:\n\(promedioTurnaround/UInt64(sistemaOperativo.colaDeTerminados.count))\n")
+                print("El tiempo promedio de bloqueados de los procesos terminados es de:\n\(promedioBloqueado/UInt64(sistemaOperativo.colaDeTerminados.count))\n")
+            }
+            
              
     }
     

@@ -2,33 +2,59 @@
 
 Este proyecto es una simulacion de los procesos que estan en CPU.
 Para correrlo se debe tener un archivo como el anexado en el proyecto con el formato
-Se debe colocar el directorio de docuemenetos con el nombre de  "Politica.txt"
+Se debe colocar el directorio de documentos con el nombre de  "archivo.txt"
 ```
-FCFS // First come first served
-QUANTUM 0 // Indicando 0 Segundos
-0 Llega A
-5 Llega B
-10 Llega C
-12 Llega D
-2000 Acaba A
-2001 Acaba B
-2002 startI/O A // Error
-2003 startI/O C
-2392 Llega E
-2423 Acaba D
-3745 endI/O C
-4000 Llega G
-4838 Acaba E
-5000 Llega F
-5727 startI/O C
-8937 endI/O C
-19938 Acaba F
-19940 Acaba C
-19941 Acaba G
-19942 Acaba F
-19943 Acaba C
-19944 endSimulacion
+FCFS
+QUANTUM 0
+0 Llega 1
+5 Llega 2
+10 Llega 3
+15 startI/O 1
+20 Llega 4
+25 endI/O 1
+30 startI/O 2
+35 Llega 5
+40 startI/O 3
+45 Llega 6
+50 endI/O 3
+55 endI/O 2
+60 Acaba 2
+65 Acaba 3
+70 Acaba 1
+75 Acaba 4
+80 Acaba 5
+85 Acaba 6
+endSimulacion
+
 ```
+
+```
+prioPreemptive
+QUANTUM 0
+0 Llega 1 prio 1
+5 Llega 2 prio 2
+10 Llega 3 prio 2
+15 startI/O 1
+20 Llega 4 prio 3
+25 endI/O 1
+30 startI/O 1
+35 startI/O 2
+40 Llega 5 prio 1
+45 Llega 6 prio 5
+50 Llega 7 prio 4
+55 Acaba 5 prio 1
+60 endI/O 1 
+65 endI/O 2
+70 Acaba 1
+75 Acaba 2
+80 Acaba 3
+85 Acaba 4
+90 Acaba 7
+95 Acaba 6
+FinSimulacion
+
+```
+
 -------
 Construir en el directorio
 ```
