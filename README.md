@@ -77,7 +77,7 @@ export PATH=~/swift/swift-5.1.2-RELEASE-ubuntu18.04/usr/bin:$PATH
 
 Comprobar con 
 ```
-swift –version
+swift --version
 ```
 
 
