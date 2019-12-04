@@ -72,7 +72,7 @@ $ wget https://swift.org/builds/swift-5.1.2-release/ubuntu1804/swift-5.1.2-RELEA
 $ mkdir ~/swift
 $ tar -xvzf swift-5.1.2-RELEASE-ubuntu18.04.tar.gz -C ~/swift
 $ sudo vi ~/.bashrc
-export PATH=~/swift/swift-5.1.2-RELEASE-ubuntu15.04/usr/bin:$PATH
+export PATH=~/swift/swift-5.1.2-RELEASE-ubuntu18.04/usr/bin:$PATH
 ```
 
 Comprobar con 
