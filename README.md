@@ -74,6 +74,8 @@ $ tar -xvzf swift-5.1.2-RELEASE-ubuntu18.04.tar.gz -C ~/swift
 $ sudo vi ~/.bashrc
 export PATH=~/swift/swift-5.1.2-RELEASE-ubuntu18.04/usr/bin:$PATH
 ```
+Instalación en MacOS:
+Requisitos: Tener Xcode instalado
 
 Comprobar con 
 ```
