@@ -2,7 +2,6 @@
 //  File.swift
 //  
 //
-//  Created by Alejandro Hernandez on 24/11/19.
 //
 
 import Foundation
